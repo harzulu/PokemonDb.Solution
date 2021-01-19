@@ -1,6 +1,7 @@
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PokemonDb.Models;
 
 namespace PokemonDb.Controllers
@@ -36,6 +37,24 @@ namespace PokemonDb.Controllers
         public ActionResult<Pokemon> Get (int id)
         {
             return _db.Pokemons.FirstOrDefault(entry => entry.PokemonId == id);
+        }
+
+        // PUT api/pokemons/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] Pokemon pokemon)
+        {
+            pokemon.PokemonId = id;
+            _db.Entry(pokemon).State = EntityState.Modified;
+            _db.SaveChanges();
+        }
+
+        //DELETE api/pokemons/1
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            var pokemonToDelete = _db.Pokemons.FirstOrDefault(entry => entry.PokemonId == id);
+            _db.Pokemons.Remove(pokemonToDelete);
+            _db.SaveChanges();
         }
     }
 }

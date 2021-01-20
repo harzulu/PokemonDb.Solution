@@ -1,0 +1,19 @@
+@using Pokedex.Models
+
+@{
+    Layout = "_Layout";
+}
+
+<h1>All Pokemon:</h1>
+<hr/>
+<ol>
+@foreach (Pokemon pokemon in Model)
+{
+    <ul>
+        <li>Pokedex Id: @pokemon.PokemonId</li>
+        <li>Pokedex Name: @pokemon.PokemonName</li>
+        <li>Pokedex Type: @pokemon.PokemonType</li>
+    </ul>
+    <a href="/Pokemons/Details/@(pokemon.PokemonId)"><p>View Details</p></a>
+}
+</ol>

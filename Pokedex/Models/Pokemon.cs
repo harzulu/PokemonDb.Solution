@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Pokedex.Models;
 
 namespace Pokedex.Models
 {
@@ -21,6 +20,17 @@ namespace Pokedex.Models
             List<Pokemon> pokemonList = JsonConvert.DeserializeObject<List<Pokemon>>(jsonResponse.ToString());
 
             return pokemonList;
+        }
+
+        public static Pokemon GetDetails(int id)
+        {
+            var apiCallTask = ApiHelper.Get(id);
+            var result = apiCallTask.Result;
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(result);
+            Pokemon pokemon = JsonConvert.DeserializeObject<Pokemon>(jsonResponse.ToString());
+
+            return pokemon;
         }
     }
 }

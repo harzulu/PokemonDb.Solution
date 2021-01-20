@@ -19,9 +19,21 @@ namespace PokemonDb.Controllers
 
         // GET api/pokemons
         [HttpGet]
-        public ActionResult<IEnumerable<Pokemon>> Get()
+        public ActionResult<IEnumerable<Pokemon>> Get(string pokemonName, string pokemonType)
         {
-            return _db.Pokemons.ToList();
+            var query = _db.Pokemons.AsQueryable();
+
+            if (pokemonName != null)
+            {
+                query = query.Where(entry => entry.PokemonName == pokemonName);
+            }
+
+            if (pokemonType != null)
+            {
+                query = query.Where(entry => entry.PokemonType == pokemonType);
+            }
+
+            return query.ToList();
         }
 
         // POST api/pokemons

@@ -1,8 +1,8 @@
 ﻿using PokemonDb.Models;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,11 +20,16 @@ namespace PokemonDb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddDbContext<PokemonDbContext> (opt => opt.UseMySql(Configuration.GetConnectionString("Defaultconnection")));
-            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<PokemonDbContext> (opt => opt.UseInMemoryDatabase("PokemonDb"));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddDbContext<PokemonDbContext> (opt => opt.UseMySql(Configuration.GetConnectionString("Defaultconnection")));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //services.AddDbContext<PokemonDbContext> (opt => opt.UseInMemoryDatabase("PokemonDb"));
             services.AddSwaggerGen();
+            services.AddApiVersioning(o => {
+                o.ReportApiVersions = true;
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o. DefaultApiVersion = new ApiVersion(2, 0); 
+            });
         }
 
         //This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

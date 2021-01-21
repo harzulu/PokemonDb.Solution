@@ -6,13 +6,14 @@ using PokemonDb.Models;
 
 namespace PokemonDb.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/{v:apiVersion}/Pokemons")]
     [ApiController]
-    public class PokemonsController : ControllerBase
+    public class PokemonsV1Controller : ControllerBase
     {
         private PokemonDbContext _db;
 
-        public PokemonsController(PokemonDbContext db)
+        public PokemonsV1Controller(PokemonDbContext db)
         {
             _db = db;
         }
@@ -35,8 +36,42 @@ namespace PokemonDb.Controllers
 
             return query.ToList();
         }
+    }
 
+        //[ApiVersion("2.0')]
+        // [Route(“api/{version:ApiVersion}/Values”)]
+        //[ApiController]
         // POST api/pokemons
+    [ApiVersion("2.0")]
+    [Route("api/{v:apiVersion}/Pokemons")]
+    [ApiController]
+    public class PokemonsV2Controller : ControllerBase
+    {
+        private PokemonDbContext _db;
+
+        public PokemonsV2Controller(PokemonDbContext db)
+        {
+            _db = db;
+        }
+        
+        [HttpGet]
+        public ActionResult<IEnumerable<Pokemon>> Get(string pokemonName, string pokemonType)
+        {
+            var query = _db.Pokemons.AsQueryable();
+
+            if (pokemonName != null)
+            {
+                query = query.Where(entry => entry.PokemonName == pokemonName);
+            }
+
+            if (pokemonType != null)
+            {
+                query = query.Where(entry => entry.PokemonType == pokemonType);
+            }
+
+            return query.ToList();
+        }
+        
         [HttpPost]
         public void Post([FromBody] Pokemon pokemon)
         {
